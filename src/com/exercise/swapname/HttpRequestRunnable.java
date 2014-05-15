@@ -2,23 +2,25 @@ package com.exercise.swapname;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.concurrent.Callable;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class HttpRequestRunnable implements Runnable {
+class HttpRequestRunnable implements Callable<JSONObject> {
 
-	private JSONArray data;
-	public HttpRequestRunnable(JSONArray arr) {
+	private JSONObject data;
+	HttpRequestRunnable(JSONObject arr) {
 		this.data = arr;
 	}
 
 	@Override
-	public void run() {
+	public JSONObject call() throws Exception {
 		try {
 			EntityHandler handler = new EntityHandler();
 			DefaultHttpClient client = new DefaultHttpClient();
@@ -30,13 +32,16 @@ public class HttpRequestRunnable implements Runnable {
 			HttpResponse response = client.execute(post);
 			HttpEntity responseEntity = response.getEntity();
 			
-			System.out.println(handler.handle(responseEntity));
-			
+			return handler.handle(responseEntity);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+		return null;
 	}
-
 }

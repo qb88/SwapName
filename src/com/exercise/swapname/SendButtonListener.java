@@ -1,11 +1,14 @@
 package com.exercise.swapname;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
-import android.app.ListActivity;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,9 +17,10 @@ import android.widget.Toast;
 
 class SendButtonListener implements OnClickListener {
 	
-	private ListActivity activity;
+	private MainActivity activity = null;
+	SparseBooleanArray checkedItems = null;
 
-	SendButtonListener(ListActivity activity) {
+	SendButtonListener(MainActivity activity) {
 		this.activity = activity;
 	}
 
@@ -24,10 +28,20 @@ class SendButtonListener implements OnClickListener {
 	public void onClick(View v) {
 		JSONParser parser = new JSONParser();
 		try {
-			JSONArray arr = parser.pack(checkData());
-			Thread thread = new Thread(new HttpRequestRunnable(arr));
-			thread.start();
+			ArrayList<JSONObject> arr = parser.pack(checkData());
+			ArrayList<PersonModel> persons = new ArrayList<PersonModel>();
+			ExecutorService exec = Executors.newSingleThreadExecutor();
+			for(JSONObject objToHandle : arr) {
+				Future<?> result = exec.submit(new HttpRequestRunnable(objToHandle));
+				JSONObject obj = (JSONObject) result.get();
+				persons.add(parser.unpack(obj));
+			}
+			activity.updateList(persons);
 		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
 	}
@@ -38,13 +52,14 @@ class SendButtonListener implements OnClickListener {
 		if(list.getCheckedItemCount() <= 0) {
 			Toast.makeText(activity.getApplicationContext(), "No items selected!", Toast.LENGTH_SHORT).show();
 		} else {
-			SparseBooleanArray checkedItems = list.getCheckedItemPositions();
+			checkedItems = list.getCheckedItemPositions();
 			for(int i = 0; i < list.getCount(); i++) {
 				if(checkedItems.get(i) == true) {
 					result.add((PersonModel) list.getItemAtPosition(i));
 				}
 			}
 		}
+		activity.setLastChecked(result);
 		return result;
 	}
 }

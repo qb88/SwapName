@@ -2,30 +2,25 @@ package com.exercise.swapname;
 
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JSONParser {
+class JSONParser {
 
-	public JSONArray pack(ArrayList<PersonModel> checkData) throws JSONException {
-		JSONArray arr = new JSONArray();
+	ArrayList<JSONObject> pack(ArrayList<PersonModel> checkData) throws JSONException {
+		ArrayList<JSONObject> list = new ArrayList<JSONObject>();
 		for(PersonModel model : checkData) {
 			JSONObject obj = new JSONObject();
 			obj.put(PersonModel.FNAME_TAG, model.getFName());
 			obj.put(PersonModel.SNAME_TAG, model.getSName());
-			arr.put(obj);
+			list.add(obj);
 		}
-		return arr;
+		return list;
 	}
 	
-	public ArrayList<PersonModel> unpack(String data) throws JSONException {
-		ArrayList<PersonModel> result = new ArrayList<PersonModel>();
-		JSONArray arr = new JSONArray(data);
-		for(int i = 0; i < arr.length(); i++) {
-			JSONObject obj = arr.getJSONObject(i);
-			result.add(new PersonModel(obj.getString(PersonModel.FNAME_TAG), obj.getString(PersonModel.SNAME_TAG)));
-		}
+	PersonModel unpack(JSONObject data) throws JSONException {
+		PersonModel result = null;
+		result = new PersonModel(data.getString(PersonModel.FNAME_TAG), data.getString(PersonModel.SNAME_TAG));
 		return result;
 	}
 }

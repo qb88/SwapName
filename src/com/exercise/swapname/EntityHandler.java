@@ -5,18 +5,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.http.HttpEntity;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class EntityHandler {
+class EntityHandler {
 
-	public String handle(HttpEntity entity) throws IllegalStateException, IOException {
+	JSONObject handle(HttpEntity entity) throws IllegalStateException, IOException, JSONException {
 		BufferedReader input = new BufferedReader(new InputStreamReader(entity.getContent()));
 		String line = null;
 		StringBuilder sb = new StringBuilder();
 		while((line = input.readLine()) != null) {
-			System.out.println(line);
 			sb.append(line);
 		}
 		input.close();
-		return sb.toString();
+		return new JSONObject(sb.toString());
 	}
 }
