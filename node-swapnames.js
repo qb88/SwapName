@@ -1,7 +1,9 @@
 function  swapNames(data){
 	var  ndata  = new  Object();
+	console.log(data);
 	ndata.fname  =  data.sname;
 	ndata.sname  = data.fname;
+	console.log(ndata);
 	return  ndata;
 }
 

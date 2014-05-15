@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 public class JSONParser {
 
-	public void pack(ArrayList<PersonModel> checkData) throws JSONException {
+	public JSONArray pack(ArrayList<PersonModel> checkData) throws JSONException {
 		JSONArray arr = new JSONArray();
 		for(PersonModel model : checkData) {
 			JSONObject obj = new JSONObject();
@@ -16,6 +16,7 @@ public class JSONParser {
 			obj.put(PersonModel.SNAME_TAG, model.getSName());
 			arr.put(obj);
 		}
+		return arr;
 	}
 	
 	public ArrayList<PersonModel> unpack(String data) throws JSONException {

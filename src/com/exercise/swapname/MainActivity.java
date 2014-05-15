@@ -25,7 +25,6 @@ public class MainActivity extends ListActivity {
 		setListAdapter(adapter);
 		setContentView(R.layout.activity_main);
 		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		
 		btnSend = (Button)findViewById(R.id.btnSend);
 		btnSend.setOnClickListener(new SendButtonListener(this));
 	}

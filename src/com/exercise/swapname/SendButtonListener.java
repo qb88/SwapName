@@ -2,6 +2,7 @@ package com.exercise.swapname;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.app.ListActivity;
@@ -23,7 +24,9 @@ class SendButtonListener implements OnClickListener {
 	public void onClick(View v) {
 		JSONParser parser = new JSONParser();
 		try {
-			parser.pack(checkData());
+			JSONArray arr = parser.pack(checkData());
+			Thread thread = new Thread(new HttpRequestRunnable(arr));
+			thread.start();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
