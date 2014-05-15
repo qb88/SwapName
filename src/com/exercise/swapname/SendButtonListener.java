@@ -2,6 +2,8 @@ package com.exercise.swapname;
 
 import java.util.ArrayList;
 
+import org.json.JSONException;
+
 import android.app.ListActivity;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -20,7 +22,11 @@ class SendButtonListener implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		JSONParser parser = new JSONParser();
-		parser.pack(checkData());
+		try {
+			parser.pack(checkData());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private ArrayList<PersonModel> checkData() {

@@ -2,6 +2,9 @@ package com.exercise.swapname;
 
 public class PersonModel {
 
+	public final static String FNAME_TAG = "fname";
+	public final static String SNAME_TAG = "sname";
+	
 	private String fName;
 	private String sName;
 	
